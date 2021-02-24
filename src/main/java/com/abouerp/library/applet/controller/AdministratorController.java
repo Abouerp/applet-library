@@ -1,6 +1,7 @@
 package com.abouerp.library.applet.controller;
 
 import com.abouerp.library.applet.bean.ResultBean;
+import com.abouerp.library.applet.service.CacheService;
 import com.abouerp.library.applet.service.WxRequestService;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,13 +13,18 @@ import org.springframework.web.bind.annotation.*;
 public class AdministratorController {
 
     private final WxRequestService wxRequestService;
+    private final CacheService cacheService;
 
-    public AdministratorController(WxRequestService wxRequestService) {
+    public AdministratorController(WxRequestService wxRequestService,
+                                   CacheService cacheService) {
         this.wxRequestService = wxRequestService;
+        this.cacheService = cacheService;
     }
 
     @PostMapping("/login")
     public ResultBean login(@RequestParam String code){
-        return ResultBean.ok(wxRequestService.login(code));
+        cacheService.login(wxRequestService.login(code));
+        //todo 生成token返回
+        return ResultBean.ok();
     }
 }
