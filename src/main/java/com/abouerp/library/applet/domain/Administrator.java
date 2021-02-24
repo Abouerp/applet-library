@@ -1,6 +1,5 @@
-package com.abouerp.library.applets.domain;
+package com.abouerp.library.applet.domain;
 
-import com.abouerp.library.applet.domain.Role;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
