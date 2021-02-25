@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Abouerp
  */
 @Data
-public class LoginDTO implements Serializable {
+public class WxLoginDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     @JsonProperty("openid")
     private String openId;
