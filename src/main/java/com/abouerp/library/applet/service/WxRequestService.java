@@ -2,7 +2,7 @@ package com.abouerp.library.applet.service;
 
 
 import com.abouerp.library.applet.config.WxParamProperties;
-import com.abouerp.library.applet.dto.LoginDTO;
+import com.abouerp.library.applet.dto.WxLoginDTO;
 import com.abouerp.library.applet.utils.JsonUtils;
 import com.abouerp.library.applet.utils.WebClientUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class WxRequestService {
         return UriComponentsBuilder.fromHttpUrl(rootPath);
     }
 
-    public LoginDTO login(String jsCode){
+    public WxLoginDTO login(String jsCode){
         UriComponentsBuilder uriComponentsBuilder = url(LOGIN_URL)
                 .queryParam("appid", wxParamProperties.getAppid())
                 .queryParam("secret",wxParamProperties.getSecret())
@@ -42,7 +42,7 @@ public class WxRequestService {
                 .uri(uriComponentsBuilder.toUriString())
                 .retrieve()
                 .bodyToMono(String.class)
-                .map(it-> JsonUtils.readValue(it, LoginDTO.class))
+                .map(it-> JsonUtils.readValue(it, WxLoginDTO.class))
                 .block();
     }
 }
