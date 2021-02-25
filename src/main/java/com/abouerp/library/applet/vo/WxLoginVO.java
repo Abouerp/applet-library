@@ -11,8 +11,7 @@ import java.util.List;
 @Data
 public class WxLoginVO {
 
-    private String gender;
-    private String nickName;
-    private String jsCode;
+    private String mobile;
+    private String password;
 
 }
