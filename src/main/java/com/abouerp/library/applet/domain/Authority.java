@@ -2,6 +2,8 @@ package com.abouerp.library.applet.domain;
 
 
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.EnumMap;
 
 /**
@@ -67,4 +69,7 @@ public enum Authority {
         return description;
     }
 
+    public SimpleGrantedAuthority springAuthority() {
+        return new SimpleGrantedAuthority(this.name());
+    }
 }
