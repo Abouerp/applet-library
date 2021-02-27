@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 @Data
 @ConfigurationProperties(prefix = "wx.miniapp")
 public class WxParamProperties {
-
-
     private String appid;
     private String secret;
 }
