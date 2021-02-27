@@ -14,5 +14,8 @@ import java.util.Optional;
 public interface AdministratorRepository extends JpaRepository<Administrator,Integer> {
 
     @EntityGraph(attributePaths = "roles.authorities")
-    Optional<Administrator> findByOpenId(String openId);
+    Optional<Administrator> findByMobile(String mobile);
+
+    @EntityGraph(attributePaths = "roles.authorities")
+    Optional<Administrator> findByUsername(String mobile);
 }
