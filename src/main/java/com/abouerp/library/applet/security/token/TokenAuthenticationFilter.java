@@ -3,6 +3,7 @@ package com.abouerp.library.applet.security.token;
 
 import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.Administrator;
+import com.abouerp.library.applet.exception.UnauthorizedException;
 import com.abouerp.library.applet.repository.AdministratorRepository;
 import com.abouerp.library.applet.security.UserPrincipal;
 import com.abouerp.library.applet.utils.JsonUtils;
@@ -16,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -42,15 +44,18 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
     private boolean postOnly = true;
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
 
     public TokenAuthenticationFilter(AdministratorRepository administratorRepository,
-                                     RedisTemplate<String,String> redisTemplate,
-                                     AuthenticationManager authenticationManager) {
+                                     RedisTemplate<String, String> redisTemplate,
+                                     AuthenticationManager authenticationManager,
+                                     AuthenticationFailureHandler authenticationFailureHandler) {
         super.setFilterProcessesUrl("/api/user/login");
         this.authenticationManager = authenticationManager;
         this.administratorRepository = administratorRepository;
-        this.redisTemplate =redisTemplate;
+        this.redisTemplate = redisTemplate;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
     //身份认证
@@ -72,7 +77,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
         mobile = mobile.trim();
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(mobile, password,new ArrayList<>());
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(mobile, password, new ArrayList<>());
         setDetails(request, authRequest);
 
         return authenticationManager.authenticate(authRequest);
@@ -102,7 +107,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        UserPrincipal userPrincipal = (UserPrincipal)authResult.getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) authResult.getPrincipal();
         Administrator administrator = administratorRepository.findByUsername(userPrincipal.getUsername()).orElse(null);
 
         String accessToken = RandomStringUtils.randomAlphanumeric(100);
@@ -110,15 +115,14 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
         log.info(accessToken);
         redisTemplate.opsForValue().set(accessToken, JsonUtils.writeValueAsString(administrator), 3L, TimeUnit.HOURS);
 
-        log.info("admin = {}",redisTemplate.opsForValue().get(accessToken));
+        log.info("admin = {}", redisTemplate.opsForValue().get(accessToken));
         response.getWriter().write(JsonUtils.writeValueAsString(ResultBean.ok(accessToken)));
-//        response.setHeader("token",accessToken);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException, ServletException {
-        response.getWriter().write("authentication failed, reason: " + failed.getMessage());
+        authenticationFailureHandler.onAuthenticationFailure(request, response, failed);
     }
 }

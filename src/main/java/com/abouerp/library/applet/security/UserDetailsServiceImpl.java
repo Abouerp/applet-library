@@ -7,7 +7,6 @@ import com.abouerp.library.applet.repository.AdministratorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final AdministratorRepository administratorRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final HttpServletRequest httpServletRequest;
 
-    public UserDetailsServiceImpl(AdministratorRepository administratorRepository,
 
-                                  PasswordEncoder passwordEncoder,
-                                  HttpServletRequest httpServletRequest) {
+    public UserDetailsServiceImpl(AdministratorRepository administratorRepository) {
         this.administratorRepository = administratorRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.httpServletRequest = httpServletRequest;
     }
 
     @Override

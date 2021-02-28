@@ -26,10 +26,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
-//    private final TokenAuthenticationSecurityConfig tokenAuthenticationSecurityConfig;
     private final AdministratorRepository administratorRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -39,13 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           LogoutHandler logoutHandler,
                           PasswordEncoder passwordEncoder,
                           @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-//                          TokenAuthenticationSecurityConfig tokenAuthenticationSecurityConfig,
                           AdministratorRepository administratorRepository,
                           RedisTemplate<String, String> redisTemplate) {
-
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
-//        this.tokenAuthenticationSecurityConfig =tokenAuthenticationSecurityConfig;
         this.administratorRepository = administratorRepository;
         this.redisTemplate = redisTemplate;
     }
@@ -57,10 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated()
             .and()
                 //验证token
-//                .apply(tokenAuthenticationSecurityConfig)
-                .addFilter(new TokenAuthenticationFilter(administratorRepository,redisTemplate,authenticationManager()))
+                .addFilter(new TokenAuthenticationFilter(administratorRepository,redisTemplate,authenticationManager(),authenticationFailureHandler))
                 .addFilter(new TokenPreRequestsFilter(redisTemplate,authenticationManager()))
-
+//                .exceptionHandling()
+//                .accessDeniedHandler(authenticationFailureHandler)
                 .csrf().disable();
     //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
