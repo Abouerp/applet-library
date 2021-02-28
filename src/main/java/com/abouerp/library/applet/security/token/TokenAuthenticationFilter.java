@@ -1,6 +1,7 @@
 package com.abouerp.library.applet.security.token;
 
 
+import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.Administrator;
 import com.abouerp.library.applet.repository.AdministratorRepository;
 import com.abouerp.library.applet.security.UserPrincipal;
@@ -110,7 +111,8 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
         redisTemplate.opsForValue().set(accessToken, JsonUtils.writeValueAsString(administrator), 3L, TimeUnit.HOURS);
 
         log.info("admin = {}",redisTemplate.opsForValue().get(accessToken));
-        response.setHeader("token",accessToken);
+        response.getWriter().write(JsonUtils.writeValueAsString(ResultBean.ok(accessToken)));
+//        response.setHeader("token",accessToken);
     }
 
     @Override
