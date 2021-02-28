@@ -1,15 +1,12 @@
 package com.abouerp.library.applet.security;
 
-import com.abouerp.library.applet.domain.Administrator;
 import com.abouerp.library.applet.repository.AdministratorRepository;
 import com.abouerp.library.applet.security.handler.LogoutHandler;
 import com.abouerp.library.applet.security.token.TokenAuthenticationFilter;
-//import com.abouerp.library.applet.security.token.TokenAuthenticationSecurityConfig;
 import com.abouerp.library.applet.security.token.TokenPreRequestsFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +18,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 /**
  * 利用jwt token的方式配置security
+ *
  * @author Abouerp
  */
 @Configuration
@@ -54,14 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/api/**").authenticated()
-            .and()
+                .and()
                 //验证token
-                .addFilter(new TokenAuthenticationFilter(administratorRepository,redisTemplate,authenticationManager(),authenticationFailureHandler))
-                .addFilter(new TokenPreRequestsFilter(redisTemplate,authenticationManager()))
-//                .exceptionHandling()
-//                .accessDeniedHandler(authenticationFailureHandler)
+                .addFilter(new TokenAuthenticationFilter(administratorRepository, redisTemplate, authenticationManager(), authenticationFailureHandler))
+                .addFilter(new TokenPreRequestsFilter(redisTemplate, authenticationManager()))
                 .csrf().disable();
-    //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Override
