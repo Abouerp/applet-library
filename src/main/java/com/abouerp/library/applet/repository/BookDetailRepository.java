@@ -14,10 +14,6 @@ import java.util.List;
 @Repository
 public interface BookDetailRepository extends JpaRepository<BookDetail, Integer>, QuerydslPredicateExecutor<BookDetail> {
 
-    @Query(value = "select * from BookDetail where book_id = ?1 order by id desc limit 1",
-            nativeQuery = true)
-    BookDetail findLastBookDetailByBookId(Integer id);
-
     @Query(value = "select * from  BookDetail  where book_id = ?1",nativeQuery = true)
     List<BookDetail> findByBookId(Integer id);
 
