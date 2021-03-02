@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Abouerp
@@ -25,6 +26,9 @@ public class BookDetailService {
         this.bookDetailRepository = bookDetailRepository;
     }
 
+    public BookDetail updateStatus(BookDetail bookDetail){
+        return bookDetailRepository.save(bookDetail);
+    }
 
     public Page<BookDetail> findAll(Pageable pageable, BookDetailVO bookDetailVO) {
 
@@ -49,4 +53,8 @@ public class BookDetailService {
         return bookDetailRepository.findByBookId(id);
     }
 
+
+    public Optional<BookDetail> findById(Integer id){
+        return bookDetailRepository.findById(id);
+    }
 }
