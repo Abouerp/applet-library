@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .antMatchers("/api/user/me").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .and()
                 //验证token
