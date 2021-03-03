@@ -2,6 +2,7 @@ package com.abouerp.library.applet.controller;
 
 import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.Administrator;
+import com.abouerp.library.applet.exception.UnauthorizedException;
 import com.abouerp.library.applet.mapper.AdministratorMapper;
 import com.abouerp.library.applet.service.AdministratorService;
 import com.abouerp.library.applet.utils.JsonUtils;
@@ -20,10 +21,10 @@ import java.util.Map;
 public class AdministratorController {
 
     private final AdministratorService administratorService;
-    private final RedisTemplate<String,String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public AdministratorController(AdministratorService administratorService,
-                                   RedisTemplate<String,String> redisTemplate) {
+                                   RedisTemplate<String, String> redisTemplate) {
         this.administratorService = administratorService;
         this.redisTemplate = redisTemplate;
     }
@@ -31,9 +32,15 @@ public class AdministratorController {
     @GetMapping("/me")
     public ResultBean<Map<String, Object>> me(HttpServletRequest request) {
         String token = request.getHeader("token");
-        Administrator administrator = JsonUtils.readValue(redisTemplate.opsForValue().get(token), Administrator.class);
+        if (token == null) {
+            throw new UnauthorizedException();
+        }
+        String json = redisTemplate.opsForValue().get(token);
         Map<String, Object> map = new HashMap<>(2);
-        map.put("user", AdministratorMapper.INSTANCE.toDTO(administrator));
+        if (json != null) {
+            Administrator administrator = JsonUtils.readValue(json, Administrator.class);
+            map.put("user", AdministratorMapper.INSTANCE.toDTO(administrator));
+        }
         return ResultBean.ok(map);
     }
 }
