@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @author Abouerp
@@ -29,7 +28,7 @@ public class BookDetailController {
 
     //借书 or 还书
     @PatchMapping("/{id}")
-    public ResultBean Borrowing(@PathVariable Integer id, BookStatus status){
+    public ResultBean Borrowing(@PathVariable Integer id, BookStatus status) {
         BookDetail bookDetail = bookDetailService.findById(id).orElseThrow(BookDetailNotFoundException::new);
         bookDetail.setStatus(status);
         bookDetailService.updateStatus(bookDetail);
@@ -43,7 +42,8 @@ public class BookDetailController {
 
     /**
      * 根据图书的id获取该图书的所有馆藏信息
-     * @param bookDetailVO.bookId  图书的id
+     *
+     * @param bookDetailVO.bookId 图书的id
      */
     @GetMapping
     public ResultBean findAll(BookDetailVO bookDetailVO,
