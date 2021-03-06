@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  web:
+    image: applet-library/abouerp:latest
+    networks:
+      - library
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - 9998:8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./deploy/resources/application.yml:/app/resources/application.yml:ro
+      - /root/web/storage/Library:/Library
+    restart: always
+
+  mysql:
+    image: mysql
+    networks:
+      - library
+    ports:
+      - 3306:3306
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./deploy/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+      - library_mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    restart: always
+
+  redis:
+    image: redis
+    networks:
+      - library
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - library_redis_data:/data
+    restart: always
+
+networks:
+  library:
+    external: true
+
+volumes:
+  library_mysql_data:
+    external: true
+  library_redis_data:
+    external: true
+
+
+
