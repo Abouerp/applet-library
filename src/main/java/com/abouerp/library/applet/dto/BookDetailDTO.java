@@ -16,7 +16,7 @@ public class BookDetailDTO {
     //在馆位置
     private String address;
     //还书时间
-    private Instant backTime;
+    private Instant returnTime;
     private BookStatus status;
     //借阅次数
     private Integer borrowingTimes;

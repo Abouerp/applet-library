@@ -14,7 +14,7 @@ public class BookDetailVO {
     private String address;
     private String searchCode;
     //还书时间
-    private Instant backTime;
+    private Instant returnTime;
     private BookStatus status;
     private Integer borrowingTimes = 0;
     private Integer renewalTimes = 0;
