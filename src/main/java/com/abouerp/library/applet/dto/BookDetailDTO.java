@@ -3,6 +3,8 @@ package com.abouerp.library.applet.dto;
 import com.abouerp.library.applet.domain.book.BookStatus;
 import lombok.Data;
 
+import java.time.Instant;
+
 /**
  * @author Abouerp
  */
@@ -14,7 +16,7 @@ public class BookDetailDTO {
     //在馆位置
     private String address;
     //还书时间
-    private String backTime;
+    private Instant backTime;
     private BookStatus status;
     //借阅次数
     private Integer borrowingTimes;

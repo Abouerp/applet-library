@@ -3,6 +3,8 @@ package com.abouerp.library.applet.vo;
 import com.abouerp.library.applet.domain.book.BookStatus;
 import lombok.Data;
 
+import java.time.Instant;
+
 /**
  * @author Abouerp
  */
@@ -12,7 +14,7 @@ public class BookDetailVO {
     private String address;
     private String searchCode;
     //还书时间
-    private String backTime;
+    private Instant backTime;
     private BookStatus status;
     private Integer borrowingTimes = 0;
     private Integer renewalTimes = 0;
