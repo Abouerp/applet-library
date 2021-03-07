@@ -107,12 +107,15 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
         UserPrincipal userPrincipal = (UserPrincipal) authResult.getPrincipal();
         Administrator administrator = administratorRepository.findByUsername(userPrincipal.getUsername()).orElse(null);
 
-        String accessToken = RandomStringUtils.randomAlphanumeric(100);
-        //key:token    value:用户对象   三小时有效
-        log.info(accessToken);
+        String accessToken = redisTemplate.opsForValue().get("user:" + administrator.getId());
+        if (accessToken != null) {
+            redisTemplate.delete("user:" + administrator.getId());
+        }
+
+        accessToken = RandomStringUtils.randomAlphanumeric(100);
+        redisTemplate.opsForValue().set("user:" + administrator.getId(), accessToken, 3L, TimeUnit.HOURS);
         redisTemplate.opsForValue().set(accessToken, JsonUtils.writeValueAsString(administrator), 3L, TimeUnit.HOURS);
 
-        log.info("admin = {}", redisTemplate.opsForValue().get(accessToken));
         response.getWriter().write(JsonUtils.writeValueAsString(ResultBean.ok(accessToken)));
     }
 
