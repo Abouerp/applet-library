@@ -26,7 +26,7 @@ public class BookDetailService {
         this.bookDetailRepository = bookDetailRepository;
     }
 
-    public BookDetail updateStatus(BookDetail bookDetail){
+    public BookDetail save(BookDetail bookDetail){
         return bookDetailRepository.save(bookDetail);
     }
 

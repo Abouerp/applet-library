@@ -2,15 +2,23 @@ package com.abouerp.library.applet.controller;
 
 import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.book.BookDetail;
+import com.abouerp.library.applet.domain.book.BookRecord;
 import com.abouerp.library.applet.domain.book.BookStatus;
 import com.abouerp.library.applet.exception.BookDetailNotFoundException;
 import com.abouerp.library.applet.mapper.BookDetailMapper;
+import com.abouerp.library.applet.security.UserPrincipal;
 import com.abouerp.library.applet.service.BookDetailService;
+import com.abouerp.library.applet.service.BookRecordService;
+import com.abouerp.library.applet.utils.UserUtils;
 import com.abouerp.library.applet.vo.BookDetailVO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Instant;
 
 
 /**
@@ -21,17 +29,37 @@ import org.springframework.web.bind.annotation.*;
 public class BookDetailController {
 
     private final BookDetailService bookDetailService;
+    private final BookRecordService bookRecordService;
 
-    public BookDetailController(BookDetailService bookDetailService) {
+    public BookDetailController(BookDetailService bookDetailService,
+                                BookRecordService bookRecordService) {
         this.bookDetailService = bookDetailService;
+        this.bookRecordService = bookRecordService;
     }
 
-    //借书 or 还书
-    @PatchMapping("/{id}")
-    public ResultBean Borrowing(@PathVariable Integer id, BookStatus status) {
-        BookDetail bookDetail = bookDetailService.findById(id).orElseThrow(BookDetailNotFoundException::new);
-        bookDetail.setStatus(status);
-        bookDetailService.updateStatus(bookDetail);
+    //借书 or 还书,根据索书号来
+    @PatchMapping
+    public ResultBean Borrowing(@RequestParam Integer bookDetailId,
+                                @RequestParam Instant borrowTime,
+                                @RequestParam Instant returnTime) {
+        BookDetail bookDetail = bookDetailService.findById(bookDetailId).orElseThrow(BookDetailNotFoundException::new);
+        //借阅记录
+        BookRecord bookRecord = new BookRecord().setId(UserUtils.getCurrentAuditorId().get())
+                .setUsername(UserUtils.getCurrentAuditorUsername().get())
+                .setBookDetailId(bookDetailId)
+                .setBookName(bookDetail.getBook().getName())
+                .setBorrowTime(borrowTime)
+                .setReturnTime(returnTime)
+                .setStatus(BookStatus.OUT_LIBRARY)
+                .setBorrowWay("applet");
+        bookRecordService.save(bookRecord);
+
+        //设置图书的详细
+        bookDetail.setStatus(BookStatus.OUT_LIBRARY);
+        bookDetail.setBorrowingTimes(bookDetail.getBorrowingTimes()+1);
+        bookDetail.setReturnTime(returnTime);
+        bookDetailService.save(bookDetail);
+
         return ResultBean.ok();
     }
 
@@ -42,8 +70,6 @@ public class BookDetailController {
 
     /**
      * 根据图书的id获取该图书的所有馆藏信息
-     *
-     * @param bookDetailVO.bookId 图书的id
      */
     @GetMapping
     public ResultBean findAll(BookDetailVO bookDetailVO,
