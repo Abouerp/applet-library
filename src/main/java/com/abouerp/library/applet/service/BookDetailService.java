@@ -49,11 +49,6 @@ public class BookDetailService {
         return bookDetailRepository.findAll(booleanBuilder, pageable);
     }
 
-    public List<BookDetail> findByBookId(Integer id){
-        return bookDetailRepository.findByBookId(id);
-    }
-
-
     public Optional<BookDetail> findById(Integer id){
         return bookDetailRepository.findById(id);
     }
