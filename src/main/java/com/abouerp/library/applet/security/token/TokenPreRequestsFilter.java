@@ -4,6 +4,7 @@ import com.abouerp.library.applet.domain.Administrator;
 import com.abouerp.library.applet.domain.Authority;
 import com.abouerp.library.applet.domain.Role;
 import com.abouerp.library.applet.exception.UnauthorizedException;
+import com.abouerp.library.applet.mapper.AdministratorMapper;
 import com.abouerp.library.applet.utils.JsonUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.Nullable;
@@ -48,7 +49,7 @@ public class TokenPreRequestsFilter extends BasicAuthenticationFilter {
         token = token.trim();
         Administrator administrator = JsonUtils.readValue(redisTemplate.opsForValue().get(token),Administrator.class);
         if (administrator != null) {
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(administrator.getMobile(), null,
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(AdministratorMapper.INSTANCE.toUserPrincipal(administrator), null,
                     administrator.getRoles()
                             .parallelStream()
                             .map(Role::getAuthorities)
