@@ -3,7 +3,6 @@ package com.abouerp.library.applet.security.token;
 
 import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.Administrator;
-import com.abouerp.library.applet.exception.UnauthorizedException;
 import com.abouerp.library.applet.repository.AdministratorRepository;
 import com.abouerp.library.applet.security.UserPrincipal;
 import com.abouerp.library.applet.utils.JsonUtils;
@@ -16,10 +15,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
