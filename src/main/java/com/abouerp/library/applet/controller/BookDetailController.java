@@ -6,7 +6,6 @@ import com.abouerp.library.applet.domain.book.BookRecord;
 import com.abouerp.library.applet.domain.book.BookStatus;
 import com.abouerp.library.applet.exception.BookDetailNotFoundException;
 import com.abouerp.library.applet.mapper.BookDetailMapper;
-import com.abouerp.library.applet.security.UserPrincipal;
 import com.abouerp.library.applet.service.BookDetailService;
 import com.abouerp.library.applet.service.BookRecordService;
 import com.abouerp.library.applet.utils.UserUtils;
@@ -14,8 +13,6 @@ import com.abouerp.library.applet.vo.BookDetailVO;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
