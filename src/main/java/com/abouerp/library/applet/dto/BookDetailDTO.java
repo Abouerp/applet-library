@@ -19,9 +19,9 @@ public class BookDetailDTO {
     private Instant returnTime;
     private BookStatus status;
     //借阅次数
-    private Integer borrowingTimes;
+//    private Integer borrowingTimes;
     //续借次数
-    private Integer renewalTimes;
+//    private Integer renewalTimes;
     private String createBy;
     private String updateBy;
 }

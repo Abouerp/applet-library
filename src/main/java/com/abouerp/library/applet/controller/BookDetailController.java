@@ -22,7 +22,7 @@ import java.time.Instant;
  * @author Abouerp
  */
 @RestController
-@RequestMapping("/api/book-detail")
+@RequestMapping("/api/book")
 public class BookDetailController {
 
     private final BookDetailService bookDetailService;
@@ -35,7 +35,7 @@ public class BookDetailController {
     }
 
     //借书 or 还书,根据索书号来
-    @PatchMapping
+    @PutMapping
     public ResultBean Borrowing(@RequestParam Integer bookDetailId,
                                 @RequestParam Instant borrowTime,
                                 @RequestParam Instant returnTime) {
@@ -55,9 +55,8 @@ public class BookDetailController {
         bookDetail.setStatus(BookStatus.OUT_LIBRARY);
         bookDetail.setBorrowingTimes(bookDetail.getBorrowingTimes()+1);
         bookDetail.setReturnTime(returnTime);
-        bookDetailService.save(bookDetail);
 
-        return ResultBean.ok();
+        return ResultBean.ok(BookDetailMapper.INSTANCE.toDTO(bookDetailService.save(bookDetail)));
     }
 
     @GetMapping("/status")

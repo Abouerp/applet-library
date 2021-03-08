@@ -1,6 +1,5 @@
 package com.abouerp.library.applet.service;
 
-
 import com.abouerp.library.applet.domain.book.BookDetail;
 import com.abouerp.library.applet.domain.book.QBookDetail;
 import com.abouerp.library.applet.repository.BookDetailRepository;
@@ -10,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,7 +18,6 @@ import java.util.Optional;
 public class BookDetailService {
 
     private final BookDetailRepository bookDetailRepository;
-
 
     public BookDetailService(BookDetailRepository bookDetailRepository) {
         this.bookDetailRepository = bookDetailRepository;
