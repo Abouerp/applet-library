@@ -19,22 +19,24 @@ import java.time.Instant;
 
 
 /**
+ * 借书流程
+ *
  * @author Abouerp
  */
 @RestController
 @RequestMapping("/api/book")
-public class BookDetailController {
+public class BookController {
 
     private final BookDetailService bookDetailService;
     private final BookRecordService bookRecordService;
 
-    public BookDetailController(BookDetailService bookDetailService,
-                                BookRecordService bookRecordService) {
+    public BookController(BookDetailService bookDetailService,
+                          BookRecordService bookRecordService) {
         this.bookDetailService = bookDetailService;
         this.bookRecordService = bookRecordService;
     }
 
-    //借书 or 还书,根据索书号来
+    //借书 前端生成当前时间为借书时间，还书时间前端提供给用户设置多长 1个月.2个月等..
     @PutMapping
     public ResultBean Borrowing(@RequestParam Integer bookDetailId,
                                 @RequestParam Instant borrowTime,
@@ -53,15 +55,10 @@ public class BookDetailController {
 
         //设置图书的详细
         bookDetail.setStatus(BookStatus.OUT_LIBRARY);
-        bookDetail.setBorrowingTimes(bookDetail.getBorrowingTimes()+1);
+        bookDetail.setBorrowingTimes(bookDetail.getBorrowingTimes() + 1);
         bookDetail.setReturnTime(returnTime);
 
         return ResultBean.ok(BookDetailMapper.INSTANCE.toDTO(bookDetailService.save(bookDetail)));
-    }
-
-    @GetMapping("/status")
-    public ResultBean getBookStatus() {
-        return ResultBean.ok(BookStatus.mappers);
     }
 
     /**
@@ -72,6 +69,5 @@ public class BookDetailController {
                               @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResultBean.ok(bookDetailService.findAll(pageable, bookDetailVO).map(BookDetailMapper.INSTANCE::toDTO));
     }
-
 
 }
