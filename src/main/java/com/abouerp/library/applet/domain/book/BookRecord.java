@@ -3,9 +3,7 @@ package com.abouerp.library.applet.domain.book;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -23,6 +21,7 @@ public class BookRecord implements Serializable {
     private String username;
     private String bookName;
     private Integer bookDetailId;
+    @Enumerated(EnumType.STRING)
     private BookStatus status;
     //借书时间
     private Instant borrowTime;
@@ -30,7 +29,4 @@ public class BookRecord implements Serializable {
     private Instant returnTime;
     //web or applet
     private String borrowWay;
-
-
-
 }
