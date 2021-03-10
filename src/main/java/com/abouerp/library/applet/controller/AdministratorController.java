@@ -2,15 +2,24 @@ package com.abouerp.library.applet.controller;
 
 import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.Administrator;
+import com.abouerp.library.applet.domain.book.BookRecord;
 import com.abouerp.library.applet.exception.UnauthorizedException;
 import com.abouerp.library.applet.mapper.AdministratorMapper;
+import com.abouerp.library.applet.security.UserPrincipal;
 import com.abouerp.library.applet.service.AdministratorService;
+import com.abouerp.library.applet.service.BookRecordService;
 import com.abouerp.library.applet.utils.JsonUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,11 +31,15 @@ public class AdministratorController {
 
     private final AdministratorService administratorService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final BookRecordService bookRecordService;
+
 
     public AdministratorController(AdministratorService administratorService,
-                                   RedisTemplate<String, String> redisTemplate) {
+                                   RedisTemplate<String, String> redisTemplate,
+                                   BookRecordService bookRecordService) {
         this.administratorService = administratorService;
         this.redisTemplate = redisTemplate;
+        this.bookRecordService = bookRecordService;
     }
 
     @GetMapping("/me")
@@ -42,5 +55,12 @@ public class AdministratorController {
             map.put("user", AdministratorMapper.INSTANCE.toDTO(administrator));
         }
         return ResultBean.ok(map);
+    }
+
+    //获取个人借阅记录
+    @GetMapping("/book/record")
+    public ResultBean getRecord(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                @PageableDefault(sort = {"status","updateTime"},direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResultBean.ok(bookRecordService.findByUserId(userPrincipal.getId(),pageable));
     }
 }

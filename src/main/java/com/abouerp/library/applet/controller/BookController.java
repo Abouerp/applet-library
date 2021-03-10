@@ -43,13 +43,13 @@ public class BookController {
                                 @RequestParam Instant returnTime) {
         BookDetail bookDetail = bookDetailService.findById(bookDetailId).orElseThrow(BookDetailNotFoundException::new);
         //借阅记录
-        BookRecord bookRecord = new BookRecord().setId(UserUtils.getCurrentAuditorId().get())
+        BookRecord bookRecord = new BookRecord().setUserId(UserUtils.getCurrentAuditorId().get())
                 .setUsername(UserUtils.getCurrentAuditorUsername().get())
                 .setBookDetailId(bookDetailId)
                 .setBookName(bookDetail.getBook().getName())
                 .setBorrowTime(borrowTime)
                 .setReturnTime(returnTime)
-                .setStatus(BookStatus.OUT_LIBRARY)
+                .setStatus(BookStatus.BORROWING)
                 .setBorrowWay("applet");
         bookRecordService.save(bookRecord);
 
