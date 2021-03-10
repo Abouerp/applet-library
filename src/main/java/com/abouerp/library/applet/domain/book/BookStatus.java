@@ -15,7 +15,11 @@ public enum BookStatus {
     //逾期
     OVERDUE("逾期"),
     //预约中
-    SUBSCRIBE("被预约");
+    SUBSCRIBE("被预约"),
+
+    //图书记录的status
+    BORROWING("借阅中"),
+    BORROWED("已归还");
 
     private final String description;
 
