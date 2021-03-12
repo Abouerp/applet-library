@@ -28,7 +28,7 @@ public class BookRecord implements Serializable {
     private String bookName;
     private Integer bookDetailId;
     @Enumerated(EnumType.STRING)
-    private BookStatus status;
+    private RecordStatus status;
     //借书时间
     private Instant borrowTime;
     //前端选择借书时间然后返回
