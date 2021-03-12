@@ -4,6 +4,7 @@ import com.abouerp.library.applet.bean.ResultBean;
 import com.abouerp.library.applet.domain.book.BookDetail;
 import com.abouerp.library.applet.domain.book.BookRecord;
 import com.abouerp.library.applet.domain.book.BookStatus;
+import com.abouerp.library.applet.domain.book.RecordStatus;
 import com.abouerp.library.applet.exception.BookDetailNotFoundException;
 import com.abouerp.library.applet.mapper.BookDetailMapper;
 import com.abouerp.library.applet.service.BookDetailService;
@@ -49,7 +50,7 @@ public class BookController {
                 .setBookName(bookDetail.getBook().getName())
                 .setBorrowTime(borrowTime)
                 .setReturnTime(returnTime)
-                .setStatus(BookStatus.BORROWING)
+                .setStatus(RecordStatus.BORROWING)
                 .setBorrowWay("applet");
         bookRecordService.save(bookRecord);
 
