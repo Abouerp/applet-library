@@ -59,12 +59,12 @@ public class AdministratorController {
     //获取个人借阅记录
     @GetMapping("/book/record")
     public ResultBean getRecord(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                RecordStatus recordStatus,
+                                RecordStatus status,
                                 @PageableDefault(sort = {"status","updateTime"},direction = Sort.Direction.DESC) Pageable pageable) {
-        return ResultBean.ok(bookRecordService.findByUserId(userPrincipal.getId(),pageable,recordStatus));
+        return ResultBean.ok(bookRecordService.findByUserId(userPrincipal.getId(),pageable,status));
     }
 
-    @GetMapping
+    @GetMapping("/book/status")
     public ResultBean getAll() {
         return ResultBean.ok(RecordStatus.mappers);
     }
