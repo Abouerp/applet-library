@@ -2,6 +2,7 @@ package com.abouerp.library.applet.service;
 
 import com.abouerp.library.applet.domain.book.BookRecord;
 import com.abouerp.library.applet.domain.book.QBookRecord;
+import com.abouerp.library.applet.domain.book.RecordStatus;
 import com.abouerp.library.applet.repository.BookRecordRepository;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
@@ -24,10 +25,13 @@ public class BookRecordService {
         return bookRecordRepository.save(bookRecord);
     }
 
-    public Page<BookRecord> findByUserId(Integer id, Pageable pageable){
+    public Page<BookRecord> findByUserId(Integer id, Pageable pageable, RecordStatus recordStatus){
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QBookRecord qBookRecord = QBookRecord.bookRecord;
         booleanBuilder.and(qBookRecord.userId.eq(id));
+        if (recordStatus!=null) {
+            booleanBuilder.and(qBookRecord.status.eq(recordStatus));
+        }
         return bookRecordRepository.findAll(booleanBuilder,pageable);
     }
 
