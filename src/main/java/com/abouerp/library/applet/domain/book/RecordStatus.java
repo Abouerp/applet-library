@@ -8,7 +8,8 @@ import java.util.EnumMap;
 public enum RecordStatus {
     //图书记录的status
     BORROWING("借阅中"),
-    BORROWED("已归还");
+    BORROWED("已归还"),
+    SUBSCRIBING("预约中");
 
     private final String description;
     public static EnumMap<RecordStatus, String> mappers = new EnumMap<>(RecordStatus.class);
