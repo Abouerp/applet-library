@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 /**
  * @author Abouerp
@@ -21,10 +20,6 @@ public class BookDetailService {
 
     public BookDetailService(BookDetailRepository bookDetailRepository) {
         this.bookDetailRepository = bookDetailRepository;
-    }
-
-    public BookDetail save(BookDetail bookDetail){
-        return bookDetailRepository.save(bookDetail);
     }
 
     public Page<BookDetail> findAll(Pageable pageable, BookDetailVO bookDetailVO) {
@@ -46,7 +41,4 @@ public class BookDetailService {
         return bookDetailRepository.findAll(booleanBuilder, pageable);
     }
 
-    public Optional<BookDetail> findById(Integer id){
-        return bookDetailRepository.findById(id);
-    }
 }
