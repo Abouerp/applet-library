@@ -21,18 +21,18 @@ public class BookRecordService {
         this.bookRecordRepository = bookRecordRepository;
     }
 
-    public BookRecord save(BookRecord bookRecord){
+    public BookRecord save(BookRecord bookRecord) {
         return bookRecordRepository.save(bookRecord);
     }
 
-    public Page<BookRecord> findByUserId(Integer id, Pageable pageable, RecordStatus recordStatus){
+    public Page<BookRecord> findByUserId(Integer id, Pageable pageable, RecordStatus recordStatus) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         QBookRecord qBookRecord = QBookRecord.bookRecord;
         booleanBuilder.and(qBookRecord.userId.eq(id));
-        if (recordStatus!=null) {
+        if (recordStatus != null) {
             booleanBuilder.and(qBookRecord.status.eq(recordStatus));
         }
-        return bookRecordRepository.findAll(booleanBuilder,pageable);
+        return bookRecordRepository.findAll(booleanBuilder, pageable);
     }
 
 }
